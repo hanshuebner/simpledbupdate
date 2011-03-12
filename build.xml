@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Skripte with Jar-in-Jar Loader">
+    <target name="create_run_jar">
+        <jar destfile="build/SimpleDBUpdate.jar">
+            <zipfileset src="lib/commons-io-1.4.jar"/>
+            <zipfileset src="lib/commons-lang-2.4.jar"/>
+            <zipfileset src="lib/mysql-connector-java-5.1.12-bin.jar"/>
+            <fileset dir="bin"/>
+        </jar>
+    </target>
+</project>
