@@ -46,16 +46,16 @@ public class DBSkriptReader {
         public int compare(DBSkript skript1, DBSkript skript2) {
             int comp = skript1.getVersion() - skript2.getVersion();
             if (comp == 0 && !skript1.equals(skript2)) {
-                LOG.log(Level.WARNING, "Achtung: 2 Skripte haben die gleiche Versionsnummer: "
+                LOG.log(Level.WARNING, "Warning: 2 scripts have the same version number, please check: "
                         + skript1.getDatei().getAbsolutePath() + " " + skript2.getDatei().getAbsolutePath());
-                throw new IllegalArgumentException("2 Skripte haben die gleiche Versionsnummer, bitte pr�fen.");
+                throw new IllegalArgumentException("2 scripts have the same version number, please check.");
             }
             return comp;
         }
     }
 
     static class DBFileFilter implements FileFilter {
-        private static final String REGEXP = "dbupdate_v[0-9]{1}[0-9]*\\.sql";
+        private static final String REGEXP = "dbupdate_v[0-9]{1}[0-9]*_.*\\.sql";
         private Pattern pattern;
 
         public DBFileFilter() {

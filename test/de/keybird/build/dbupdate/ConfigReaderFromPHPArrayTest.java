@@ -8,22 +8,15 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
 
-import de.keybird.build.dbupdate.ConfigReader;
-import de.keybird.build.dbupdate.DBHelfer;
+import de.keybird.build.dbupdate.config.ConfigReaderFromPHPArray;
 
-public class ConfigReaderTest extends TestCase {
-    private ConfigReader config;
-
-    @Override
-    public void setUp() {
-        config = new ConfigReader();
-    }
+public class ConfigReaderFromPHPArrayTest extends TestCase {
 
     public void testParse() throws Exception {
 
         // Pr�fen ob original Konfigurationsdatei eingelesen werden kann.
         File datei = FileUtils.toFile(this.getClass().getResource("config.inc.php"));
-        @SuppressWarnings("unchecked")
+        ConfigReaderFromPHPArray config = new ConfigReaderFromPHPArray(datei);
         List<String> lines = FileUtils.readLines(datei);
         Properties props = config.parse(lines);
         assertEquals("root", props.getProperty(DBHelfer.PROP_USER));

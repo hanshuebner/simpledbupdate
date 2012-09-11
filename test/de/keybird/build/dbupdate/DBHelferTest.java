@@ -14,11 +14,7 @@ import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.SystemUtils;
-
-import de.keybird.build.dbupdate.DBHelfer;
-import de.keybird.build.dbupdate.DBSkript;
-import de.keybird.build.dbupdate.UpdateNotPossibleException;
+import org.apache.commons.lang3.SystemUtils;
 
 public class DBHelferTest extends TestCase {
     private static final Logger LOG = Logger.getLogger(DBHelferTest.class.getName());
@@ -63,8 +59,7 @@ public class DBHelferTest extends TestCase {
             // Funktionierendes Skript
             StringBuilder b = new StringBuilder();
             b.append("--- Kommentar\n");
-            b
-                    .append("CREATE TABLE IF NOT EXISTS `test` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`text` VARCHAR( 255 ) NOT NULL);\n");
+            b.append("CREATE TABLE IF NOT EXISTS `test` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`text` VARCHAR( 255 ) NOT NULL);\n");
             b.append("INSERT INTO `test` (`id` ,`text`) VALUES (NULL , 'xxx');\n");
             skript = sqlVorbereiten(b.toString(), 10);
             sqlHelfer.update(skript);
@@ -77,7 +72,7 @@ public class DBHelferTest extends TestCase {
 
     private DBSkript sqlVorbereiten(String sql, int version) throws Exception {
         File tmpDir = SystemUtils.getJavaIoTmpDir();
-        File f = new File(tmpDir, "dbupdate_v123.sql");
+        File f = new File(tmpDir, "dbupdate_v123_test.sql");
         tmpDateien.add(f);
         FileUtils.writeStringToFile(f, sql);
         DBSkript skript = new DBSkript(f);

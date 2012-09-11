@@ -7,8 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class DBSkript {
 
@@ -26,7 +26,7 @@ public class DBSkript {
 
     private int parseVersion(String name) {
         int start = PREFIX.length();
-        int end = name.length() - SUFFIX.length();
+        int end = name.indexOf('_', start);
         String versionS = name.substring(start, end);
         int result = Integer.parseInt(versionS);
         return result;

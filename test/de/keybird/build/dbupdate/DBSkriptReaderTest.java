@@ -10,8 +10,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
 
-import de.keybird.build.dbupdate.DBSkript;
-import de.keybird.build.dbupdate.DBSkriptReader;
 import de.keybird.build.dbupdate.DBSkriptReader.DBFileFilter;
 
 public class DBSkriptReaderTest extends TestCase {
@@ -38,12 +36,12 @@ public class DBSkriptReaderTest extends TestCase {
         assertFalse(filter.accept(dir));
 
         // Regex
-        assertTrue(filter.accept(getFile("dbupdate_v12345.sql")));
-        assertTrue(filter.accept(getFile("dbupdate_v0.sql")));
-        assertTrue(filter.accept(getFile("dbupdate_v0003.sql")));
+        assertTrue(filter.accept(getFile("dbupdate_v12345_abc.sql")));
+        assertTrue(filter.accept(getFile("dbupdate_v0_.sql")));
+        assertTrue(filter.accept(getFile("dbupdate_v0003_xxx.sql")));
         assertFalse(filter.accept(getFile("dbupdate_v.sql")));
-        assertFalse(filter.accept(getFile("dbupdate_v12a345.sql")));
-        assertFalse(filter.accept(getFile("dbupdatev12345.sql")));
+        assertFalse(filter.accept(getFile("dbupdate_v12a345_ff.sql")));
+        assertFalse(filter.accept(getFile("dbupdatev12345_dd.sql")));
         assertFalse(filter.accept(getFile(".sql")));
     }
 
@@ -65,8 +63,8 @@ public class DBSkriptReaderTest extends TestCase {
     public void testGetAlleDBSkripteDoppelteVersionsNr() throws IOException {
         int max = 5;
         createSetOfFiles(max);
-        getFile("dbupdate_v0033.sql");
-        getFile("dbupdate_v33.sql");
+        getFile("dbupdate_v0033_aa.sql");
+        getFile("dbupdate_v33_bb.sql");
         DBSkriptReader db = new DBSkriptReader();
         try {
             db.getAlleDBSkripte(tmpDir);
@@ -80,7 +78,7 @@ public class DBSkriptReaderTest extends TestCase {
     public void testGetNextSkript() throws IOException {
 
         createSetOfFiles(5);
-        getFile("dbupdate_v0033.sql");
+        getFile("dbupdate_v0033_bb.sql");
         getFile("f99999Name.sql");
         DBSkriptReader db = new DBSkriptReader();
         SortedSet<DBSkript> skripte = db.getAlleDBSkripte(tmpDir);
@@ -95,7 +93,7 @@ public class DBSkriptReaderTest extends TestCase {
 
     private void createSetOfFiles(int max) throws IOException {
         for (int i = 0; i < max; i++) {
-            getFile("dbupdate_v" + i + ".sql");
+            getFile("dbupdate_v" + i + "_xx" + i + ".sql");
         }
     }
 

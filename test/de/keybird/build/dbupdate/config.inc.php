@@ -13,10 +13,6 @@ $APP_CONF = array();
 
 /** Wichtigste Configfiles */
 
-// Das Hauptverzeichnis der Anwendung
-// Slash am Ende muss vorhanden sein
-$APP_CONF['server_rootdir'] = '/home/entwickler/workspace/trunk-vk/output/';
-
 
 
 // Datenbankspezifische Konfiguration
@@ -24,11 +20,9 @@ $APP_CONF['db_host'] = '127.0.0.1'; //Master DB
 $APP_CONF['db_failover'] = '127.0.0.1'; //Failover-DB
 $APP_CONF['db_user'] = 'root';
 $APP_CONF['db_passwd'] = 'entwickler';
-$APP_CONF['db_database'] = 'trunk-wild';
+$APP_CONF['db_database'] = 'project';
 $APP_CONF['db_type'] = 'MySQL';
-$APP_CONF['db_notify'] = 'patrick.schweizer@ecratum.de';
 
-include($APP_CONF['server_rootdir'] ."classes/common/functionDbConnect.inc.php");
 dbConnectConfig();
 
 $res = mysql_query("SELECT * from srm_sysconfig");

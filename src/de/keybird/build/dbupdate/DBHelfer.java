@@ -15,7 +15,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Schreibt die DBSkripte in die Datenbank.
@@ -174,7 +174,7 @@ public class DBHelfer {
     }
 
     /** Erzeugt die Versionstabelle falls sie noch nicht existiert. */
-    void createVersionsTable() throws UpdateNotPossibleException {
+    public void createVersionsTable() throws UpdateNotPossibleException {
         if (this.con == null) {
             init();
         }
@@ -273,7 +273,7 @@ public class DBHelfer {
         b.append("`description` VARCHAR(255) NOT NULL COMMENT 'Beschreibung der Aktualisierung',");
         b.append("`date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Aktuelles Datum',");
         b.append("PRIMARY KEY ( `id` )");
-        b.append(") COMMENT = 'Haelt die aktuelle Version der Datenbankstruktur.';");
+        b.append(") COMMENT = 'Knows the version number of the data base.';");
         return b.toString();
     }
 
