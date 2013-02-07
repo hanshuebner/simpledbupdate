@@ -40,7 +40,7 @@ public class ConfigReaderFromPHPArray {
             List<String> lines = FileUtils.readLines(configFile);
             props = parse(lines);
         } catch (IOException e) {
-            LOG.log(Level.SEVERE, "Kann Konfigurationsdatei nicht lesen: " + configFile.getAbsolutePath(), e);
+            LOG.log(Level.SEVERE, "Cannot read config file: " + configFile.getAbsolutePath(), e);
             throw new UpdateNotPossibleException();
         }
         return props;
