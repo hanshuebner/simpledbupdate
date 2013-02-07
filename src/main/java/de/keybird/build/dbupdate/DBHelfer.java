@@ -20,9 +20,9 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Schreibt die DBSkripte in die Datenbank.
+ * Executes the database scripts.
  * 
- * @author entwickler
+ * @author Patrick
  */
 public class DBHelfer {
 
@@ -166,7 +166,7 @@ public class DBHelfer {
     private boolean executeDBSkript(DBSkript skript) throws UpdateNotPossibleException {
         String sql;
 
-        // 1. Skript auslesen
+        // 1. read script
         try {
             skript.lesen();
             sql = skript.getInhalt();
@@ -175,7 +175,7 @@ public class DBHelfer {
             return false;
         }
 
-        // 2. SQL ausf�hren
+        // 2. execute SQL
         try {
             sqlBatch(sql);
         } catch (SQLException e) {
@@ -208,13 +208,18 @@ public class DBHelfer {
         List<String> sqlList = prepareSql(sql);
         try {
             int result;
+            con.setAutoCommit(false);
             stmt = con.createStatement();
             for (String line : sqlList) {
                 stmt.addBatch(line);
             }
             stmt.executeBatch();
             result = stmt.getUpdateCount();
+            con.commit();
             return result;
+        } catch (SQLException e) {
+            con.rollback();
+            throw e;
         } finally {
             if (stmt != null) {
                 stmt.close();
