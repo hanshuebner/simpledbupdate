@@ -11,11 +11,10 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 
-import com.jsing.common.string.StringTrimmer;
-
 import de.keybird.build.dbupdate.ConfigReader;
 import de.keybird.build.dbupdate.DBHelfer;
 import de.keybird.build.dbupdate.UpdateNotPossibleException;
+import de.keybird.build.util.StringTrimmer;
 
 public class ConfigReaderFromContextXml implements ConfigReader {
 
