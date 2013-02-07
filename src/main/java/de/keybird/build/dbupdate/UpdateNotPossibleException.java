@@ -12,4 +12,8 @@ public class UpdateNotPossibleException extends Exception {
         super(msg, e);
     }
 
+    public UpdateNotPossibleException(String msg) {
+        super(msg);
+    }
+
 }

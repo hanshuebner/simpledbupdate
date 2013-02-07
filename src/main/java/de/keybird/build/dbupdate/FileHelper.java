@@ -22,13 +22,15 @@ public class FileHelper {
         return f;
     }
 
-    public static File checkFolder(String path) throws UpdateNotPossibleException {
+    public static File checkFolder(String path, String propertyName) throws UpdateNotPossibleException {
+        nullCheck(path, propertyName);
         File f = new File(path);
         checkFolder(f);
         return f;
     }
 
-    public static File checkFile(String path) throws UpdateNotPossibleException {
+    public static File checkFile(String path, String propertyName) throws UpdateNotPossibleException {
+        nullCheck(path, propertyName);
         File f = new File(path);
         checkFile(f);
         return f;
@@ -48,5 +50,11 @@ public class FileHelper {
             throw new UpdateNotPossibleException();
         }
         return f;
+    }
+
+    public static void nullCheck(String path, String propertyName) throws UpdateNotPossibleException {
+        if (path == null) {
+            throw new UpdateNotPossibleException("path is null, property " + propertyName + " not found.");
+        }
     }
 }

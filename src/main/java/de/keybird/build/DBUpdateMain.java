@@ -23,9 +23,9 @@ public class DBUpdateMain {
 
     public static void main(String[] args) {
         try {
-            File configFile = FileHelper.checkFile(System.getProperty(SYSTEM_PARAM_CONFIG_FILE));
+            File configFile = FileHelper.checkFile(System.getProperty(SYSTEM_PARAM_CONFIG_FILE), SYSTEM_PARAM_CONFIG_FILE);
             ConfigReader configReader = new ConfigReaderFromContextXml(configFile);
-            File pathToUpdatescripts = FileHelper.checkFolder(System.getProperty(SYSTEM_PARAM_UPDATE_SCRIPT_DIR));
+            File pathToUpdatescripts = FileHelper.checkFolder(System.getProperty(SYSTEM_PARAM_UPDATE_SCRIPT_DIR), SYSTEM_PARAM_UPDATE_SCRIPT_DIR);
             DBUpdate dbupdate = new DBUpdate(pathToUpdatescripts, configReader);
             dbupdate.execute();
         } catch (UpdateNotPossibleException e) {
