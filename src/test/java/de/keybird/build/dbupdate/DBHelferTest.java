@@ -3,6 +3,7 @@ package de.keybird.build.dbupdate;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.SystemUtils;
 public class DBHelferTest extends TestCase {
     private static final Logger LOG = Logger.getLogger(DBHelferTest.class.getName());
 
-    private String dbName = "DBHelferTest";
+    private String dbName = "DbUpdateTest";
     private Properties props = new Properties();
 
     private List<File> tmpDateien;
@@ -32,14 +33,16 @@ public class DBHelferTest extends TestCase {
 
         props.put(DBHelfer.PROP_DB_HOST, "127.0.0.1");
         props.put(DBHelfer.PROP_DB_NAME, dbName);
-        props.put(DBHelfer.PROP_USER, "DBHelferTest");
-        props.put(DBHelfer.PROP_PASSWORD, "DBHelferTest");
+        props.put(DBHelfer.PROP_USER, "DbUpdateTest");
+        props.put(DBHelfer.PROP_PASSWORD, "DbUpdateTest");
         sqlHelfer = new DBHelfer(props);
 
         Class.forName(DBHelfer.DRIVER).newInstance();
         con = DriverManager.getConnection(sqlHelfer.getConnectionString(), props);
         stmt = con.createStatement();
         stmt.execute("DROP TABLE IF EXISTS `dbversion`");
+        stmt.execute("DROP TABLE IF EXISTS `test`");
+        stmt.execute("CREATE TABLE `test` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`text` VARCHAR( 255 ) NOT NULL);");
         tmpDateien = new ArrayList<File>();
 
     }
@@ -47,25 +50,54 @@ public class DBHelferTest extends TestCase {
     public void testInsertDBSkript() throws Exception {
         try {
 
-            // Fehlerhaftes SQL Skript
-            String sql = "Kein SQL";
-            DBSkript skript = sqlVorbereiten(sql, 10);
+            // SQL with an error in the second statement
+            StringBuilder b = new StringBuilder();
+            b.append("INSERT INTO `test` (`id` ,`text`) VALUES (NULL , 'xxx');\n");
+            b.append("broken SQL;\n");
+            DBSkript skript = sqlVorbereiten(b.toString(), 10);
             try {
                 sqlHelfer.update(skript);
-                fail("Erwartete UpdateNotPossibleException wurde nicht geworfen");
+                fail("Expected UpdateNotPossibleException was not thrown");
             } catch (UpdateNotPossibleException e) {
-                LOG.log(Level.INFO, "Erwartete UpdateNotPossibleException gefangen");
+                LOG.log(Level.INFO, "Caught expected UpdateNotPossibleException");
             }
-            // Funktionierendes Skript
-            StringBuilder b = new StringBuilder();
+
+            // correct script
+            b = new StringBuilder();
             b.append("--- Kommentar\n");
-            b.append("CREATE TABLE IF NOT EXISTS `test` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`text` VARCHAR( 255 ) NOT NULL);\n");
             b.append("INSERT INTO `test` (`id` ,`text`) VALUES (NULL , 'xxx');\n");
             skript = sqlVorbereiten(b.toString(), 10);
             sqlHelfer.update(skript);
 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Fehler", e);
+            LOG.log(Level.SEVERE, "error", e);
+            fail();
+        }
+    }
+
+    public void testRollback() throws Exception {
+        try {
+
+            // SQL with an error in the second statement
+            StringBuilder b = new StringBuilder();
+            b.append("INSERT INTO `test` (`id` ,`text`) VALUES (NULL , 'xxx');\n");
+            b.append("broken SQL;\n");
+            DBSkript skript = sqlVorbereiten(b.toString(), 10);
+            try {
+                sqlHelfer.update(skript);
+                fail("Expected UpdateNotPossibleException was not thrown");
+            } catch (UpdateNotPossibleException e) {
+                LOG.log(Level.INFO, "Caught expected UpdateNotPossibleException");
+            }
+
+            // Check if rollback worked
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM test");
+            if (rs.next()) {
+                fail("Rollback has not worked");
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "error", e);
             fail();
         }
     }
