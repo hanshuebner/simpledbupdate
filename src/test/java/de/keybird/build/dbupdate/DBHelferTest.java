@@ -37,14 +37,27 @@ public class DBHelferTest extends TestCase {
         props.put(DBHelfer.PROP_PASSWORD, "DbUpdateTest");
         sqlHelfer = new DBHelfer(props);
 
-        Class.forName(DBHelfer.DRIVER).newInstance();
-        con = DriverManager.getConnection(sqlHelfer.getConnectionString(), props);
+        setUpDatabaseConnection();
         stmt = con.createStatement();
         stmt.execute("DROP TABLE IF EXISTS `dbversion`");
         stmt.execute("DROP TABLE IF EXISTS `test`");
         stmt.execute("CREATE TABLE `test` (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,`text` VARCHAR( 255 ) NOT NULL);");
+        stmt.close();
         tmpDateien = new ArrayList<File>();
+    }
 
+    private void setUpDatabaseConnection() throws Exception {
+        Class.forName(DBHelfer.DRIVER).newInstance();
+        con = DriverManager.getConnection(sqlHelfer.getConnectionString(), props);
+    }
+
+    private void closeDatabaseConnection() {
+        try {
+            stmt.close();
+            con.close();
+        } catch (SQLException e) {
+            LOG.log(Level.WARNING, "Kann DB-Verbindung nicht schliessen", e);
+        }
     }
 
     public void testInsertDBSkript() throws Exception {
@@ -158,11 +171,6 @@ public class DBHelferTest extends TestCase {
                 LOG.log(Level.WARNING, "Kann Datei nicht loeschen: " + f.getAbsolutePath());
             }
         }
-        try {
-            stmt.close();
-            con.close();
-        } catch (SQLException e) {
-            LOG.log(Level.WARNING, "Kann DB-Verbindung nicht schliessen", e);
-        }
+        closeDatabaseConnection();
     }
 }
